@@ -1,15 +1,56 @@
-## Put comments here that give an overall description of what your
-## functions do
-
-## Write a short comment describing this function
+## R Programming, Programming Assignment 2
+## See Unit Test Cases at
+## https://class.coursera.org/rprog-007/forum/thread?thread_id=83
 
 makeCacheMatrix <- function(x = matrix()) {
-
+# This function creates a special "matrix" object that can cache its inverse.
+# Assumes that the matrix supplied is always invertible.
+    
+    # Local variables to store m & m inverse
+    m <- x
+    minverse <- NULL
+    
+    # Return m
+    get <- function() m
+    
+    # Return cached value for m inverse
+    getinverse <- function(x) minverse
+    
+    # Change m
+    # if m changes, m inverse cached value is not valid anymore
+    # and has to be cleared
+    set <- function(x) {
+        m <<- x
+        minverse <<- NULL
+    }
+    
+    # Set cached value for m inverse
+    setinverse <- function() {
+        minverse <<- solve(m)
+    }
+    
+    list (get = get,
+          getinverse = getinverse,
+          set = set,
+          setinverse = setinverse)
 }
-
 
 ## Write a short comment describing this function
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+# This function computes the inverse of the special "matrix" returned by makeCacheMatrix above.
+# If the inverse has already been calculated (and the matrix has not
+# changed), then the cacheSolve should retrieve the inverse from the
+# cache.
+
+    # If, and only if, m inverse is NULL
+    # (i.e., m inverse has not been calculated yet),
+    # then compute & cache m inverse
+    if(is.null(x$getinverse()))
+        x$setinverse()
+    else
+        message("Getting cached data for matrix inverse")
+
+    # Finally, return cached value for m inverse
+    x$getinverse()
 }
