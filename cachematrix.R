@@ -1,6 +1,6 @@
 ## R Programming, Programming Assignment 2
 ## See Unit Test Cases at
-## https://class.coursera.org/rprog-007/forum/thread?thread_id=83
+## https://class.coursera.org/rprog-008/forum/thread?thread_id=174
 
 makeCacheMatrix <- function(x = matrix()) {
 # This function creates a special "matrix" object that can cache its inverse.
@@ -16,19 +16,23 @@ makeCacheMatrix <- function(x = matrix()) {
     # Return cached value for m inverse
     getinverse <- function(x) minverse
     
-    # Change m
-    # if m changes, m inverse cached value is not valid anymore
-    # and has to be cleared
+    # Change m if, and only if, its value has changed
+    # if m changes, m inverse is not valid anymore
+    # so we must clear it
     set <- function(x) {
-        m <<- x
-        minverse <<- NULL
+        if(!identical(x, m)) {
+            m <<- x
+            minverse <<- NULL
+        }
     }
     
     # Set cached value for m inverse
+    # only if not calculated
     setinverse <- function() {
-        minverse <<- solve(m)
+        if(is.null(minverse)) minverse <<- solve(m)
     }
     
+    # Return value
     list (get = get,
           getinverse = getinverse,
           set = set,
@@ -36,7 +40,8 @@ makeCacheMatrix <- function(x = matrix()) {
 }
 
 cacheSolve <- function(x, ...) {
-# This function computes the inverse of the special "matrix" returned by makeCacheMatrix above.
+# This function computes the inverse of the special "matrix" returned
+# by makeCacheMatrix above.
 # If the inverse has already been calculated (and the matrix has not
 # changed), then the cacheSolve should retrieve the inverse from the
 # cache.
